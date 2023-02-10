@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2b252473-95ab-4c09-ba34-b02797c16b01/deploy-status)](https://app.netlify.com/sites/handoven-api/deploys)
+
 # API-APS6
 
 Criar .env com MASTER_KEY
