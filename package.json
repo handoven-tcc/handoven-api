@@ -3,6 +3,9 @@
   "version": "1.0.2",
   "main": "src",
   "private": true,
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "node .",
     "test": "jest",

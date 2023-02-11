@@ -1,7 +1,6 @@
 {
   "name": "storage-app-products",
   "version": 2,
-  "public": true,
   "builds": [
     {
       "src": "src/index.js",
@@ -11,7 +10,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/index.js"
+      "dest": "src/api/index.js"
     }
   ]
 }
