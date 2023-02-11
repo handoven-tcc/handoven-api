@@ -2,7 +2,7 @@
   "name": "storage-app-products",
   "version": "1.0.2",
   "main": "src",
-  "private": false,
+  "private": true,
   "engines": {
     "node": "14.x"
   },
