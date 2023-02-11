@@ -4,6 +4,7 @@ public
 .tmp
 .idea
 .log
+.env
 dist
 docs
 npm-debug.log
