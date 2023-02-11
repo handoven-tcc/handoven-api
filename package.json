@@ -54,6 +54,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "latest": "^0.2.0",
     "mongoose": "^5.13.15",
     "mongoose-keywords": "^0.4.0",
     "morgan": "^1.9.1",
