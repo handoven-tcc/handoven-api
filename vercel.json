@@ -1,17 +1,15 @@
 {
-  "name": "storage-app-products",
   "version": 2,
-  "public": true,
   "builds": [
     {
       "src": "src/index.js",
-      "use": "@vercel/node"
+      "use": "@now/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/api/index.js"
+      "dest": "src/index.js"
     }
   ]
 }
