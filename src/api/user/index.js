@@ -4,6 +4,8 @@ import { middleware as body } from 'bodymen'
 import { create, index, show, update, destroy, findByFamilyId, checkUser, checkEmail } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
+import { checkPermission } from '../../services/authorization'
+import { unauthorized } from '../../services/response'
 export User, { schema } from './model'
 
 const router = new Router()
@@ -17,6 +19,15 @@ const { name, birthDate, cell, email, password, familyId } = schema.tree
  */
 router.post('/',
   body({ name, birthDate, cell, email, password, familyId }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service') || true,
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'create'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   create)
 
 /**
@@ -27,6 +38,15 @@ router.post('/',
 */
 router.post('/addUser',
   body({ name, birthDate, cell, email, password, familyId }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'addUserOnFamily'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   checkEmail)
 
 /**
@@ -41,6 +61,15 @@ router.post('/addUser',
 */
 router.post('/login',
   body({ email, password }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service') || true,
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'login'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   checkUser)
 
 /**
@@ -82,6 +111,15 @@ router.get('/',
       required: false
     }
   }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   index)
 
 /**
@@ -93,6 +131,15 @@ router.get('/',
  * @apiError 404 User not found.
  */
 router.get('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   show)
 
 /**
@@ -104,6 +151,15 @@ router.get('/:id',
 * @apiError 404 User not found.
 */
 router.get('/familyId/:familyId',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   findByFamilyId)
 
 /**
@@ -123,6 +179,15 @@ router.get('/familyId/:familyId',
  */
 router.put('/:id',
   body({ name, birthDate, cell, email, password, familyId }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   update)
 
 /**
@@ -133,6 +198,15 @@ router.put('/:id',
  * @apiError 404 User not found.
  */
 router.delete('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'delete'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   destroy)
 
 export default router

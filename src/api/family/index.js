@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, destroyAll } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
+import { checkPermission } from '../../services/authorization'
+import { unauthorized } from '../../services/response'
 export Family, { schema } from './model'
 
 const router = new Router()
@@ -20,6 +22,15 @@ const { name } = schema.tree
  */
 router.post('/',
   body({ name }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service') || true,
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'create'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   create)
 
 /**
@@ -41,6 +52,15 @@ router.get('/',
       required: false
     }
   }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   index)
 
 /**
@@ -52,6 +72,15 @@ router.get('/',
  * @apiError 404 Family not found.
  */
 router.get('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   show)
 
 /**
@@ -64,6 +93,15 @@ router.get('/:id',
  * @apiError 404 Family not found.
  */
 router.put('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   body({ name }),
   update)
 
@@ -75,6 +113,34 @@ router.put('/:id',
  * @apiError 404 Family not found.
  */
 router.delete('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service') || true,
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'delete'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   destroy)
+
+/**
+ * @api {delete} /family/:id Delete family
+ * @apiName DeleteFamily
+ * @apiGroup Family
+ * @apiSuccess (Success 204) 204 No Content.
+ * @apiError 404 Family not found.
+*/
+router.delete('/destroyAll/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service') || true,
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'deleteAll'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  destroyAll)
 
 export default router

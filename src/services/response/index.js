@@ -20,6 +20,30 @@ export const notFound = (res) => (entity) => {
   return null
 }
 
+export const errorHandler = (err, req, res, next) => {
+  console.log('[errorHandler]', err)
+
+  if (err.type === 'internal') {
+    return res.status(500).json(err)
+  } else if (err.type === 'invalid') {
+    return res.status(400).json(err)
+  } else if (err.type === 'unauthorized') {
+    return res.status(401).json(err)
+  } else if (err.type === 'notfound') {
+    return res.status(404).json(err)
+  } else if (err.type === 'unabletoconnect') {
+    return res.status(401).json(err)
+  } else if (err.type === 'notinitialized') {
+    return res.status(500).json(err)
+  }
+
+  return res.status(500).json({
+    type: 'internal',
+    subtype: 'unknown',
+    message: `an unknown error occurred: ${err.toString()}`
+  })
+}
+
 export const unauthorized = (res, err) => {
   res.status(401).json(err).end()
 }

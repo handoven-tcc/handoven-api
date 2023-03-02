@@ -4,6 +4,8 @@ import { middleware as body } from 'bodymen'
 import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
+import { checkPermission } from '../../services/authorization'
+import { unauthorized } from '../../services/response'
 export Plates, { schema } from './model'
 
 const router = new Router()
@@ -21,6 +23,15 @@ const { nome, secao } = schema.tree
  */
 router.post('/',
   body({ nome, secao }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'create'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   create)
 
 /**
@@ -46,6 +57,15 @@ router.get('/',
       required: false
     }
   }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   index)
 
 /**
@@ -71,6 +91,15 @@ router.get('/:limit',
       required: false
     }
   }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   indexLimit)
 
 /**
@@ -84,6 +113,15 @@ router.get('/:limit',
  */
 router.post('/name',
   body({ nome }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   retrievePlatesWithName)
 
 /**
@@ -95,6 +133,15 @@ router.post('/name',
  * @apiError 404 Plates not found.
  */
 router.get('/plateId/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   showById)
 
 /**
@@ -111,6 +158,15 @@ router.get('/plateId/:id',
  */
 router.put('/:id',
   body({ nome, secao }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   update)
 
 /**
@@ -121,6 +177,15 @@ router.put('/:id',
  * @apiError 404 Plates not found.
  */
 router.delete('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'delete'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   destroy)
 
 export default router

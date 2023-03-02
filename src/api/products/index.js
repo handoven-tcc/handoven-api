@@ -4,6 +4,8 @@ import { middleware as body } from 'bodymen'
 import { create, index, show, update, destroy, findByFamilyId, findByProductName } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
+import { checkPermission } from '../../services/authorization'
+import { unauthorized } from '../../services/response'
 export Products, { schema } from './model'
 
 const router = new Router()
@@ -26,6 +28,15 @@ const { name, type, validity, category, cost, amount, familyId } = schema.tree
  */
 router.post('/',
   body({ name, type, validity, category, cost, amount, familyId }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'create'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   create)
 
 /**
@@ -71,6 +82,15 @@ router.get('/',
       required: false
     }
   }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   index)
 
 /**
@@ -82,6 +102,15 @@ router.get('/',
  * @apiError 404 Products not found.
  */
 router.get('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   show)
 
 /**
@@ -93,6 +122,15 @@ router.get('/:id',
 * @apiError 404 Products not found.
 */
 router.get('/familyId/:familyId',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   findByFamilyId)
 
 /**
@@ -105,6 +143,15 @@ router.get('/familyId/:familyId',
 */
 router.post('/name/familyId/:familyId',
   body({ name }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   findByProductName)
 
 /**
@@ -124,6 +171,15 @@ router.post('/name/familyId/:familyId',
  */
 router.put('/:id',
   body({ name, type, validity, category, cost, amount, familyId }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   update)
 
 /**
@@ -134,6 +190,15 @@ router.put('/:id',
  * @apiError 404 Products not found.
  */
 router.delete('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'delete'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
   destroy)
 
 export default router

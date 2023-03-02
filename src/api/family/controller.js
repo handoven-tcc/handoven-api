@@ -34,3 +34,10 @@ export const destroy = ({ params }, res, next) =>
     .then((family) => family ? family.remove() : null)
     .then(success(res, 204))
     .catch(next)
+
+export const destroyAll = ({ params }, res, next) =>
+  Family.findById(params.id)
+    .then(notFound(res))
+    .then((family) => family.destroyAll())
+    .then(success(res, 204))
+    .catch(next)
