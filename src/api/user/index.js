@@ -28,7 +28,7 @@ router.post('/',
     )
       .then(() => next())
       .catch((err) => unauthorized(res, err)),
-  create)
+  checkEmail)
 
 /**
 * @api {post} /user/addUser Add User.

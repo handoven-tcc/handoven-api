@@ -1,18 +1,18 @@
 import mongoose from 'mongoose'
 
-export const checkPermission = (isService, user, family, permission) => {
+export async function checkPermission(isService, user, family, permission) {
   const User = mongoose.model('User')
   const Family = mongoose.model('Family')
   // eslint-disable-next-line eqeqeq
   if (isService === true || isService === 'true') {
-    return Promise.resolve()
+    return await Promise.resolve()
   }
 
   if (permission === 'deleteAll' && family) {
-    return Family.findOne({ _id: family })
-      .then(() => Promise.resolve())
+    return await Family.findOne({ _id: family })
+      .then(() =>  Promise.resolve())
       // eslint-disable-next-line prefer-promise-reject-errors
-      .catch(() => Promise.reject({
+      .catch(() =>  Promise.reject({
         type: 'unauthorized',
         subtype: `handoven-api.${permission}`,
         message: 'Cannot access from outside of a service.'
@@ -20,13 +20,11 @@ export const checkPermission = (isService, user, family, permission) => {
   }
 
   if (user && family) {
-    return User.findOne({ _id: user, familyId: family })
-      .then(res =>
-        // eslint-disable-next-line prefer-promise-reject-errors
-        Promise.resolve()
+    return await User.findOne({ _id: user, familyId: family })
+    .then( async res =>
+         await Promise.resolve()
       )
-      // eslint-disable-next-line prefer-promise-reject-errors
-      .catch(Promise.reject({
+      .catch(async err => await Promise.reject({
         type: 'unauthorized',
         subtype: `handoven-api.${permission}`,
         message: 'Cannot access from outside of a service.'
@@ -34,7 +32,7 @@ export const checkPermission = (isService, user, family, permission) => {
   }
 
   // eslint-disable-next-line prefer-promise-reject-errors
-  return Promise.reject({
+  return await Promise.reject({
     type: 'unauthorized',
     subtype: `handoven-api.${permission}`,
     message: 'Cannot access from outside of a service.'
