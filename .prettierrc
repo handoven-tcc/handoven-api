@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "semi": false,
+  "editorconfig": true,
+  "trailingComma": "none",
+  "tabWidth": 2,
+  "useTabs": false,
+  "parser": "typescript"
+}

@@ -12,6 +12,8 @@ mongoose.Types.ObjectId.prototype.view = function () {
   return { id: this.toString() }
 }
 
+mongoose.set('debug', true)
+
 /* istanbul ignore next */
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error: ' + err)
