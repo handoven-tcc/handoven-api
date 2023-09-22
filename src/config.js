@@ -37,7 +37,7 @@ const config = {
   test: {},
   development: {
     mongo: {
-      uri: 'mongodb+srv://Admin:jPcqkEONsSTslUSd@aps6.fl552tg.mongodb.net/aps6database?retryWrites=true&w=majority',
+      uri: 'mongodb+srv://handoventcc:THOA1L8kG2zKoT6q@develop.gsak3h5.mongodb.net/?retryWrites=true&w=majority',
       options: {
         debug: true
       }
@@ -47,7 +47,9 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.PORT || 8080,
     mongo: {
-      uri: process.env.MONGODB_URI || 'mongodb+srv://Admin:jPcqkEONsSTslUSd@aps6.fl552tg.mongodb.net/aps6database?retryWrites=true&w=majority'
+      uri:
+        process.env.MONGODB_URI ||
+        'mongodb+srv://handoventcc:THOA1L8kG2zKoT6q@develop.gsak3h5.mongodb.net/?retryWrites=true&w=majority'
     }
   }
 }
