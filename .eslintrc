@@ -1,5 +1,5 @@
 {
-  "parser": "typescript",
+  "parser": "babel-eslint",
   "extends": [
     "standard"
   ],
