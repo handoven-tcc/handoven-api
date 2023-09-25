@@ -9,7 +9,7 @@ import { unauthorized } from '../../services/response'
 export Products, { schema } from './model'
 
 const router = new Router()
-const { name, type, validity, category, cost, amount, familyId } = schema.tree
+const { name, type, validity, category, cost, amount, unitMeasure, familyId } = schema.tree
 
 /**
  * @api {post} /products Create products
@@ -27,7 +27,7 @@ const { name, type, validity, category, cost, amount, familyId } = schema.tree
  * @apiError 404 Products not found.
  */
 router.post('/',
-  body({ name, type, validity, category, cost, amount, familyId }),
+  body({ name, type, validity, category, cost, amount, unitMeasure, familyId }),
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),
@@ -75,6 +75,10 @@ router.get('/',
     },
     amount: {
       ...amount,
+      required: false
+    },
+    unitMeasure: {
+      ...unitMeasure,
       required: false
     },
     familyId: {
@@ -170,7 +174,7 @@ router.post('/name/familyId/:familyId',
  * @apiError 404 Products not found.
  */
 router.put('/:id',
-  body({ name, type, validity, category, cost, amount, familyId }),
+  body({ name, type, validity, category, cost, amount, unitMeasure, familyId }),
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),
