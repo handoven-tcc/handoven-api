@@ -1,7 +1,5 @@
 import mongoose, { now, Schema } from 'mongoose'
 
-// TODO: Possibilidade de inserir id da família no Schema
-
 const Products = new Schema({
   name: {
     type: String,
@@ -17,7 +15,7 @@ const Products = new Schema({
     required: true
   },
   category: {
-    type: String,
+    type: Number,
     required: true
   },
   // TODO: Realizar Futura Remoção do "cost"
@@ -28,6 +26,10 @@ const Products = new Schema({
   amount: {
     type: Number,
     required: true
+  },
+  unitMeasure: {
+    type: String,
+    required: false
   },
   familyId: {
     type: Schema.Types.ObjectId,
@@ -61,6 +63,7 @@ Products.methods = {
       category: this.category,
       cost: this.cost,
       amount: this.amount,
+      unitMeasure: this.unitMeasure,
       familyId: this.familyId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
