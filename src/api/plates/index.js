@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName } from './controller'
+import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName, setPlateFavorite } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
 import { checkPermission } from '../../services/authorization'
@@ -15,7 +15,10 @@ const { image, name, category, favorited, section } = schema.tree
  * @api {post} /plates Create plates
  * @apiName CreatePlates
  * @apiGroup Plates
+ * @apiParam image Plates's image.
  * @apiParam name Plates's name.
+ * @apiParam category Plates's category.
+ * @apiParam favorited Plates's favorited.
  * @apiParam section Plates's section.
  * @apiSuccess {Object} plates Plates's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -33,6 +36,28 @@ router.post('/',
       .then(() => next())
       .catch((err) => unauthorized(res, err)),
   create)
+
+/**
+ * @api {post} /plates/name Create plates
+ * @apiName RetrievePlates
+ * @apiGroup Plates
+ * @apiParam name Plates's filter.
+ * @apiSuccess {Object} plates Plates's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Plates not found.
+ */
+router.post('/name',
+  body({ name }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  retrievePlatesWithName)
 
 /**
  * @api {get} /plates/ Retrieve plates
@@ -127,36 +152,14 @@ router.get('/:limit',
   indexLimit)
 
 /**
- * @api {post} /plates/name Create plates
- * @apiName RetrievePlates
- * @apiGroup Plates
- * @apiParam filter Plates's filter.
- * @apiSuccess {Object} plates Plates's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Plates not found.
- */
-router.post('/name',
-  body({ name }),
-  (req, res, next) =>
-    checkPermission(
-      req.header('X-HandOven-Service'),
-      req.header('X-HandOven-User'),
-      req.header('X-HandOven-Family'),
-      'show'
-    )
-      .then(() => next())
-      .catch((err) => unauthorized(res, err)),
-  retrievePlatesWithName)
-
-/**
- * @api {get} /plates/plateId/:id Retrieve plates
+ * @api {get} /plates/:id Retrieve plates
  * @apiName RetrievePlates
  * @apiGroup Plates
  * @apiSuccess {Object} plates Plates's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Plates not found.
  */
-router.get('/plateId/:id',
+router.get('/:id',
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),
@@ -172,10 +175,11 @@ router.get('/plateId/:id',
  * @api {put} /plates/:id Update plates
  * @apiName UpdatePlates
  * @apiGroup Plates
+ * @apiParam image Plates's image.
  * @apiParam name Plates's name.
  * @apiParam category Plates's category.
- * @apiParam ingredients Plates's ingredients.
- * @apiParam available Plates's available.
+ * @apiParam favorited Plates's favorited.
+ * @apiParam section Plates's section.
  * @apiSuccess {Object} plates Plates's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Plates not found.
@@ -192,6 +196,28 @@ router.put('/:id',
       .then(() => next())
       .catch((err) => unauthorized(res, err)),
   update)
+
+/**
+ * @api {put} /plates/:id/favorite set favorited and Update plates
+ * @apiName favorite
+ * @apiGroup Plates
+ * @apiParam favorited Plates's favorited.
+ * @apiSuccess {Object} updateOne Plates's update.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Plates not found.
+ */
+router.put('/:id/favorite',
+  body({ favorited }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  setPlateFavorite)
 
 /**
  * @api {delete} /plates/:id Delete plates

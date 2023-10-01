@@ -9,7 +9,6 @@ import { env } from '../../config'
 
 export default (apiRoot, routes) => {
   const app = express()
-
   /* istanbul ignore next */
   if (env === 'production' || env === 'development') {
     app.use(cors())
@@ -17,8 +16,8 @@ export default (apiRoot, routes) => {
     app.use(morgan('dev'))
   }
 
-  app.use(bodyParser.urlencoded({ extended: false }))
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({ limit: '50mb' }))
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: false, parameterLimit: 50000 }))
   app.use(apiRoot, routes)
   app.use(queryErrorHandler())
   app.use(bodyErrorHandler())

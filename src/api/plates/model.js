@@ -2,8 +2,8 @@ import mongoose, { Schema } from 'mongoose'
 
 const Plates = new Schema({
   image: {
-    data: Buffer,
-    contentType: String
+    type: String,
+    required: true
   },
   name: {
     type: String,
@@ -23,7 +23,7 @@ const Plates = new Schema({
         ingredients_name: { type: String, required: true },
         ingredients_quantity: { type: String, required: true },
         ingredients_category: { type: Number, required: true },
-        ingredients_notes: { type: String, required: true }
+        ingredients_notes: { type: String, required: false }
       }
     ],
     prepare_mode: {
