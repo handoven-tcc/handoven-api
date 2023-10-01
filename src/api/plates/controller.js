@@ -45,7 +45,12 @@ export const update = ({ bodymen: { body }, params }, res, next) =>
   Plates.findById(params.id)
     .then(notFound(res))
     .then((plates) => plates ? Object.assign(plates, body).save() : null)
-    .then((plates) => plates ? plates.view(true) : null)
+    .then((plates) => plates ? plates.view() : null)
+    .then(success(res))
+    .catch(next)
+
+export const setPlateFavorite = ({ bodymen: { body }, params }, res, next) =>
+  Plates.updateOne({ _id: params.id }, { $set: { favorited: body.favorited } })
     .then(success(res))
     .catch(next)
 
