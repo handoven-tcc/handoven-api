@@ -37,7 +37,7 @@ const config = {
   test: {},
   development: {
     mongo: {
-      uri: 'mongodb://localhost:27017',
+      uri: 'mongodb+srv://handoventcc:THOA1L8kG2zKoT6q@develop.gsak3h5.mongodb.net/?retryWrites=true&w=majority',
       options: {
         debug: true
       }
