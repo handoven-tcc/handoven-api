@@ -9,20 +9,20 @@ import { unauthorized } from '../../services/response'
 export Plates, { schema } from './model'
 
 const router = new Router()
-const { nome, secao } = schema.tree
+const { image, name, category, favorited, section } = schema.tree
 
 /**
  * @api {post} /plates Create plates
  * @apiName CreatePlates
  * @apiGroup Plates
- * @apiParam nome Plates's nome.
- * @apiParam secao Plates's secao.
+ * @apiParam name Plates's name.
+ * @apiParam section Plates's section.
  * @apiSuccess {Object} plates Plates's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Plates not found.
  */
 router.post('/',
-  body({ nome, secao }),
+  body({ image, name, category, favorited, section }),
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),
@@ -48,12 +48,24 @@ router.get('/',
       type: [Schema.ObjectId],
       paths: ['Plates']
     },
-    nome: {
-      ...nome,
+    image: {
+      ...image,
       required: false
     },
-    secao: {
-      ...secao,
+    name: {
+      ...name,
+      required: false
+    },
+    category: {
+      ...category,
+      required: false
+    },
+    favorited: {
+      ...favorited,
+      required: false
+    },
+    section: {
+      ...section,
       required: false
     }
   }),
@@ -82,12 +94,24 @@ router.get('/:limit',
       type: [Schema.ObjectId],
       paths: ['Plates']
     },
-    nome: {
-      ...nome,
+    image: {
+      ...image,
       required: false
     },
-    secao: {
-      ...secao,
+    name: {
+      ...name,
+      required: false
+    },
+    category: {
+      ...category,
+      required: false
+    },
+    favorited: {
+      ...favorited,
+      required: false
+    },
+    section: {
+      ...section,
       required: false
     }
   }),
@@ -112,7 +136,7 @@ router.get('/:limit',
  * @apiError 404 Plates not found.
  */
 router.post('/name',
-  body({ nome }),
+  body({ name }),
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),
@@ -157,7 +181,7 @@ router.get('/plateId/:id',
  * @apiError 404 Plates not found.
  */
 router.put('/:id',
-  body({ nome, secao }),
+  body({ image, name, category, favorited, section }),
   (req, res, next) =>
     checkPermission(
       req.header('X-HandOven-Service'),

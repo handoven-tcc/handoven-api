@@ -1,13 +1,39 @@
 import mongoose, { Schema } from 'mongoose'
 
 const Plates = new Schema({
-  nome: {
+  image: {
+    data: Buffer,
+    contentType: String
+  },
+  name: {
     type: String,
     required: true
   },
-  secao: {
-    type: Array,
+  category: {
+    type: Number,
     required: true
+  },
+  favorited: {
+    type: Boolean,
+    required: true
+  },
+  section: {
+    ingredients: [
+      {
+        ingredients_name: { type: String, required: true },
+        ingredients_quantity: { type: String, required: true },
+        ingredients_category: { type: Number, required: true },
+        ingredients_notes: { type: String, required: true }
+      }
+    ],
+    prepare_mode: {
+      type: Array,
+      required: true
+    },
+    extras: {
+      type: Array,
+      required: true
+    }
   }
 }, {
   timestamps: true,
@@ -20,22 +46,14 @@ const Plates = new Schema({
 Plates.methods = {
   view () {
     const view = {
-      // simple view
       id: this._id,
-      nome: this.nome,
-      secao: [this.secao]
+      image: this.image,
+      name: this.nome,
+      category: this.category,
+      favorited: this.favorited,
+      section: this.section
     }
     return view
-  },
-  viewOne (plate) {
-    const viewOne = {
-      id: plate.id,
-      nome: plate.nome,
-      ingredients: plate.secao[0],
-      howDo: plate.secao[1],
-      moreInformations: plate.secao[2]
-    }
-    return viewOne
   }
 }
 
