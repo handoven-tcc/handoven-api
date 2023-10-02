@@ -14,6 +14,12 @@ export const retrievePlatesWithName = ({ bodymen: { body } }, res, next) =>
     .then(success(res, 200))
     .catch(next)
 
+export const retrievePlatesWithFvorite = ({ bodymen: { body } }, res, next) =>
+  Plates.find({ favorited: body.favorited })
+    .then((plates) => plates.map((plates) => plates.view()))
+    .then(success(res))
+    .catch(next)
+
 export const indexLimit = ({ querymen: { query, select, cursor }, params }, res, next) =>
   Plates.find(query, select, cursor).limit(parseInt(params.limit))
     .then((plates) => plates.map((plates) => plates.view()))

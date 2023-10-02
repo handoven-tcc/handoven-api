@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName, setPlateFavorite } from './controller'
+import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName, setPlateFavorite, retrievePlatesWithFvorite } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
 import { checkPermission } from '../../services/authorization'
@@ -60,6 +60,27 @@ router.post('/name',
   retrievePlatesWithName)
 
 /**
+ * @api {get} /plates/favorites Retrieve plates
+ * @apiName RetrievePlates
+ * @apiGroup Plates
+ * @apiUse listParams
+ * @apiSuccess {Object[]} plates List of plates.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.post('/favorites',
+  body({ favorited }),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  retrievePlatesWithFvorite)
+
+/**
  * @api {get} /plates/ Retrieve plates
  * @apiName RetrievePlates
  * @apiGroup Plates
@@ -106,6 +127,26 @@ router.get('/',
   index)
 
 /**
+ * @api {get} /plates/:id Retrieve plates
+ * @apiName RetrievePlates
+ * @apiGroup Plates
+ * @apiSuccess {Object} plates Plates's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Plates not found.
+ */
+router.get('/:id',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  showById)
+
+/**
  * @api {get} /plates/:limit Retrieve plates
  * @apiName RetrievePlates
  * @apiGroup Plates
@@ -150,26 +191,6 @@ router.get('/:limit',
       .then(() => next())
       .catch((err) => unauthorized(res, err)),
   indexLimit)
-
-/**
- * @api {get} /plates/:id Retrieve plates
- * @apiName RetrievePlates
- * @apiGroup Plates
- * @apiSuccess {Object} plates Plates's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Plates not found.
- */
-router.get('/:id',
-  (req, res, next) =>
-    checkPermission(
-      req.header('X-HandOven-Service'),
-      req.header('X-HandOven-User'),
-      req.header('X-HandOven-Family'),
-      'show'
-    )
-      .then(() => next())
-      .catch((err) => unauthorized(res, err)),
-  showById)
 
 /**
  * @api {put} /plates/:id Update plates
