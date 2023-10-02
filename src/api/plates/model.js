@@ -48,7 +48,7 @@ Plates.methods = {
     const view = {
       id: this._id,
       image: this.image,
-      name: this.nome,
+      name: this.name,
       category: this.category,
       favorited: this.favorited,
       section: this.section
