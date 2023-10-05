@@ -21,7 +21,7 @@ const Plates = new Schema({
     ingredients: [
       {
         ingredients_name: { type: String, required: true },
-        ingredients_quantity: { type: String, required: true },
+        ingredients_quantity: { type: Number, required: true },
         ingredients_unit_measure: { type: String, required: true },
         ingredients_category: { type: Number, required: true },
         ingredients_notes: { type: String, required: false }
