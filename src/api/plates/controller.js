@@ -14,12 +14,6 @@ export const retrievePlatesWithName = ({ bodymen: { body } }, res, next) =>
     .then(success(res, 200))
     .catch(next)
 
-export const retrievePlatesWithFvorite = ({ bodymen: { body } }, res, next) =>
-  Plates.find({ favorited: body.favorited })
-    .then((plates) => plates.map((plates) => plates.view()))
-    .then(success(res))
-    .catch(next)
-
 export const indexLimit = ({ querymen: { query, select, cursor }, params }, res, next) =>
   Plates.find(query, select, cursor).limit(parseInt(params.limit))
     .then((plates) => plates.map((plates) => plates.view()))
@@ -52,11 +46,6 @@ export const update = ({ bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then((plates) => plates ? Object.assign(plates, body).save() : null)
     .then((plates) => plates ? plates.view() : null)
-    .then(success(res))
-    .catch(next)
-
-export const setPlateFavorite = ({ bodymen: { body }, params }, res, next) =>
-  Plates.updateOne({ _id: params.id }, { $set: { favorited: body.favorited } })
     .then(success(res))
     .catch(next)
 

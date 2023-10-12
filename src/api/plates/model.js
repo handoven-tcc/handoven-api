@@ -13,10 +13,6 @@ const Plates = new Schema({
     type: Number,
     required: true
   },
-  favorited: {
-    type: Boolean,
-    required: true
-  },
   section: {
     ingredients: [
       {
@@ -51,7 +47,6 @@ Plates.methods = {
       image: this.image,
       name: this.name,
       category: this.category,
-      favorited: this.favorited,
       section: this.section
     }
     return view
