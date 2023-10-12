@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, indexLimit, showById, update, destroy, retrievePlatesWithName, setPlateFavorite, retrievePlatesWithFvorite } from './controller'
+import { create, index, indexLimit, showById, algorithm, update, destroy, retrievePlatesWithName, setPlateFavorite, retrievePlatesWithFvorite } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
 import { checkPermission } from '../../services/authorization'
@@ -9,7 +9,7 @@ import { unauthorized } from '../../services/response'
 export Plates, { schema } from './model'
 
 const router = new Router()
-const { image, name, category, favorited, section } = schema.tree
+const { plates, image, name, category, favorited, section } = schema.tree
 
 /**
  * @api {post} /plates Create plates
@@ -191,6 +191,27 @@ router.get('/:limit',
       .then(() => next())
       .catch((err) => unauthorized(res, err)),
   indexLimit)
+
+/**
+ * @api {get} /plates/algorithm/:familyId Retrieve plates
+ * @apiName RetrievePlates
+ * @apiGroup Plates
+ * @apiUse listParams
+ * @apiSuccess {Object[]} plates List of plates.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/algorithm/:familyId',
+  query(plates),
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'show'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  algorithm)
 
 /**
  * @api {put} /plates/:id Update plates

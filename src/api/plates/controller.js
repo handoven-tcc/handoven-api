@@ -32,6 +32,11 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     .then(success(res))
     .catch(next)
 
+export const algorithm = ({ params }, res, next) =>
+  Plates.algorithm(params.familyId)
+    .then(success(res))
+    .catch(next)
+
 export const showById = ({ params }, res, next) =>
   // eslint-disable-next-line no-undef
   Plates.findOne({ _id: params.id }).limit(1)
