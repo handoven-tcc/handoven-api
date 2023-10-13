@@ -37,7 +37,7 @@ const mockProducts = [
 {
     id: "6518b2336989e00054d0a791",
     name: "Cacau em Pó",
-    amount: 180,
+    amount: 179,
     unitMeasure: "Gramas (g)",
     expiryProduct: false,
 },
@@ -107,58 +107,58 @@ const mockProducts = [
 ];
 
 const mockPlates = [
-{
-    image: "stringimagembase64",
-    name: "Bolo de Chocolate",
-    category: 1,
-    favorited: true,
-    section: {
-        ingredients: [
-        {
-            ingredients_name: "Farinha de Trigo",
-            ingredients_quantity: 2,
-            ingredients_category: 7,
-            ingredients_notes: "peneirada",
-            ingredients_unit_measure: "Xícara",
+    {
+        image: "stringimagembase64",
+        name: "Bolo de Chocolate",
+        category: 1,
+        favorited: true,
+        section: {
+            ingredients: [
+            {
+                ingredients_name: "Farinha de Trigo",
+                ingredients_quantity: 2,
+                ingredients_category: 7,
+                ingredients_notes: "peneirada",
+                ingredients_unit_measure: "Xícara",
+            },
+            {
+                ingredients_name: "Açucar",
+                ingredients_quantity: 1.5,
+                ingredients_category: 1,
+                ingredients_unit_measure: "Xícara",
+            },
+            {
+                ingredients_name: "Cacau em Pó",
+                ingredients_quantity: 1.5,
+                ingredients_category: 4,
+                ingredients_unit_measure: "Xícara",
+            },
+            {
+                ingredients_name: "Ovos",
+                ingredients_quantity: 4,
+                ingredients_category: 19,
+                ingredients_notes: "grandes",
+                ingredients_unit_measure: "Unidades",
+            },
+            {
+                ingredients_name: "Leite",
+                ingredients_quantity: 1,
+                ingredients_category: 12,
+                ingredients_unit_measure: "Xícara",
+            },
+            ],
+            prepare_mode: [
+            "1. Pré-aqueça o forno a 180°C.",
+            "2. Misture a farinha de trigo, o cacau em pó e o açúcar em uma tigela.",
+            "3. Adicione os ovos e o leite à mistura seca e misture bem.",
+            "4. Despeje a massa em uma forma untada e asse por 30-35 minutos.",
+            "5. Deixe esfriar e sirva.",
+            ],
+            extras: [
+            "Tempo de Preparo: 20 minutos",
+            "Rendimento: 8 porções",
+            ],
         },
-        {
-            ingredients_name: "Açucar",
-            ingredients_quantity: 1.5,
-            ingredients_category: 1,
-            ingredients_unit_measure: "Xícara",
-        },
-        {
-            ingredients_name: "Cacau em Pó",
-            ingredients_quantity: 1.5,
-            ingredients_category: 4,
-            ingredients_unit_measure: "Xícara",
-        },
-        {
-            ingredients_name: "Ovos",
-            ingredients_quantity: 4,
-            ingredients_category: 19,
-            ingredients_notes: "grandes",
-            ingredients_unit_measure: "Unidades",
-        },
-        {
-            ingredients_name: "Leite",
-            ingredients_quantity: 1,
-            ingredients_category: 12,
-            ingredients_unit_measure: "Xícara",
-        },
-        ],
-        prepare_mode: [
-        "1. Pré-aqueça o forno a 180°C.",
-        "2. Misture a farinha de trigo, o cacau em pó e o açúcar em uma tigela.",
-        "3. Adicione os ovos e o leite à mistura seca e misture bem.",
-        "4. Despeje a massa em uma forma untada e asse por 30-35 minutos.",
-        "5. Deixe esfriar e sirva.",
-        ],
-        extras: [
-        "Tempo de Preparo: 20 minutos",
-        "Rendimento: 8 porções",
-        ],
-    },
     },
     {
         image: "stringimagembase64",
@@ -246,13 +246,12 @@ const mockPlates = [
     },
 ];
 
+const existingProducts = [];
+
 export async function algorithm(plates, products){
     let available_plates = []
     let not_available_plates = []
-    console.log("plates.length: ", plates.length)
-    // checkRecipes(plates, products); 
     const checkRecipes = async (plates, products) => {
-        let flag = 0
         for (const plate of plates) {
             const returnedData = await algorithmRunner(plate, products);
             if (returnedData.not_available_ingredients.length === 0) {
@@ -262,7 +261,6 @@ export async function algorithm(plates, products){
                 console.log(`Não pode fazer a receita: ${plate.name}`);
                 not_available_plates.push({plate, ...returnedData});
             }
-            flag++
         }
         return Promise.resolve({available_plates, not_available_plates});
     };
@@ -272,34 +270,24 @@ export async function algorithm(plates, products){
 const algorithmRunner = (plate, products) => {
     const availableIngredients = [];
     const notAvailableIngredients = [];
-    const existingProducts = [];
-  
     for (const ingredient of plate.section.ingredients) {
         let found = false;
         let amountedItem = 0;
         let missingQuantity = 0;
-        let requiredQuantity = 0;
 
         if (existingProducts.length > 0) {
-            for (const pProduct of existingProducts) {
+            for (const product of existingProducts) {
                 if (
                     ingredient.ingredients_name.toLowerCase() ===
-                    pProduct.name.toLowerCase()
+                    product.name.toLowerCase()
                 ) {
-                    if(!ingredient?.ingredients_unit_measure && ingredient.ingredients_quantity){
-                        requiredQuantity = convertToMl(
-                        ingredient.ingredients_quantity.split("")[0],
-                        ingredient.ingredients_quantity.split("")[1]
-                        );
-                    } else {
-                        requiredQuantity = convertToMl(
-                        ingredient.ingredients_quantity,
-                        ingredient.ingredients_unit_measure
-                        );
-                    }
+                    const requiredQuantity = convertToMl(
+                    ingredient.ingredients_quantity,
+                    ingredient.ingredients_unit_measure
+                    );
                     const availableQuantity = convertToMl(
-                    pProduct.amount,
-                    pProduct.unitMeasure
+                    product.amount,
+                    product.unitMeasure
                     );
         
                     if (requiredQuantity <= availableQuantity) {
@@ -324,20 +312,11 @@ const algorithmRunner = (plate, products) => {
                 if (
                     ingredient.ingredients_name.toLowerCase() ===
                     product.name.toLowerCase()
-                    ) {                        
-                     if(!ingredient?.ingredients_unit_measure && ingredient.ingredients_quantity){
-                        console.log("ingredients_quantity.split('')[0]: ", ingredients_quantity.split("")[0])
-                        console.log("ingredients_quantity.split('')[1]: ", ingredients_quantity.split("")[1])
-                        requiredQuantity = convertToMl(
-                        ingredient.ingredients_quantity.split("")[0],
-                        ingredient.ingredients_quantity.split("")[1]
-                        );
-                    } else {
-                        requiredQuantity = convertToMl(
-                        ingredient.ingredients_quantity,
-                        ingredient.ingredients_unit_measure
-                        );
-                    }
+                    ) {
+                    const requiredQuantity = convertToMl(
+                    ingredient.ingredients_quantity,
+                    ingredient.ingredients_unit_measure
+                    );
                     const availableQuantity = convertToMl(
                     product.amount,
                     product.unitMeasure
@@ -368,20 +347,17 @@ const algorithmRunner = (plate, products) => {
                 missing_quantity: missingQuantity,
             });
         } else {
-        availableIngredients.push(ingredient.ingredients_name);
+            availableIngredients.push(ingredient.ingredients_name);
         }
     }
   
     return {
-    //   plate: plate,
       available_ingredients: availableIngredients,
       not_available_ingredients: notAvailableIngredients,
     };
 };
 
 const convertToMl = (quantity, unit) => {
-    console.log("quantity: ", quantity)
-    console.log("unit: ", unit)
     if (conversionTable[unit]) {
         return quantity * conversionTable[unit];
     }

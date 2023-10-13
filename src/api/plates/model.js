@@ -86,8 +86,6 @@ Plates.statics = {
       try {
           const Products = await ProductsModel.find({familyId});
           const Plates = await PlatesModel.find();
-          // console.log("Products: "+JSON.stringify(Products))
-          // console.log("Plates: "+JSON.stringify(Plates))
           resolve(algorithm(Plates, Products))
       } catch (error) {
         console.log('[ERROR]: ', error)
