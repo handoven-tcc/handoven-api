@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy, destroyAll } from './controller'
+import { create, index, show, update, destroy, destroyAll, addPlateToFavorite, removePlateToFavorite } from './controller'
 import { schema } from './model'
 import { Schema } from 'mongoose'
 import { checkPermission } from '../../services/authorization'
@@ -9,7 +9,8 @@ import { unauthorized } from '../../services/response'
 export Family, { schema } from './model'
 
 const router = new Router()
-const { name } = schema.tree
+// eslint-disable-next-line camelcase
+const { name, plates_favorites } = schema.tree
 
 /**
  * @api {post} /family Create family
@@ -34,6 +35,48 @@ router.post('/',
   create)
 
 /**
+ * @api {put} /:id/plateId/:plateId/favorite Add plate to favorite
+ * @apiName UpdateFamily
+ * @apiGroup Family
+ * @apiParam name Family's name.
+ * @apiSuccess {Object} family Family's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Family not found.
+ */
+router.put('/:id/plateId/:plateId/favorite',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'update'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  addPlateToFavorite)
+
+/**
+ * @api {delete} /:id/plateId/:plateId/favorite remove plate to favorite
+ * @apiName UpdateFamily
+ * @apiGroup Family
+ * @apiParam name Family's name.
+ * @apiSuccess {Object} family Family's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Family not found.
+ */
+router.delete('/:id/plateId/:plateId/favorite',
+  (req, res, next) =>
+    checkPermission(
+      req.header('X-HandOven-Service'),
+      req.header('X-HandOven-User'),
+      req.header('X-HandOven-Family'),
+      'delete'
+    )
+      .then(() => next())
+      .catch((err) => unauthorized(res, err)),
+  removePlateToFavorite)
+
+/**
  * @api {get} /family Retrieve families
  * @apiName RetrieveFamilies
  * @apiGroup Family
@@ -49,6 +92,11 @@ router.get('/',
     },
     name: {
       ...name,
+      required: false
+    },
+    plates_favorites: {
+      // eslint-disable-next-line camelcase
+      ...plates_favorites,
       required: false
     }
   }),

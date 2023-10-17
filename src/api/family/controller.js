@@ -7,6 +7,36 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .then(success(res, 201))
     .catch(next)
 
+export const addPlateToFavorite = ({ params }, res, next) =>
+  Family.findById(params.id)
+    .then(notFound(res))
+    .then((family) => {
+      if (family) {
+        family.plates_favorites.push(params.plateId)
+        return family.save()
+      } else {
+        return null
+      }
+    })
+    .then((family) => family ? family.view(true) : null)
+    .then(success(res))
+    .catch(next)
+
+export const removePlateToFavorite = ({ params }, res, next) =>
+  Family.findById(params.id)
+    .then(notFound(res))
+    .then((family) => {
+      if (family) {
+        family.plates_favorites.splice(family.plates_favorites.indexOf(params.plateId))
+        return family.save()
+      } else {
+        return null
+      }
+    })
+    .then((family) => family ? family.view(true) : null)
+    .then(success(res))
+    .catch(next)
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Family.find(query, select, cursor)
     .then((families) => families.map((family) => family.view()))

@@ -6,6 +6,10 @@ const familySchema = new Schema({
   name: {
     type: String,
     required: true
+  },
+  plates_favorites: {
+    type: Array,
+    required: false
   }
 }, {
   timestamps: true,
@@ -21,6 +25,7 @@ familySchema.methods = {
       // simple view
       id: this.id,
       name: this.name,
+      plates_favorites: this.plates_favorites,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     }

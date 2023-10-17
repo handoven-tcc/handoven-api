@@ -3,7 +3,6 @@ import products from './products'
 import plates from './plates'
 import user from './user'
 import family from './family'
-import favorites from './favorites'
 
 const router = new Router()
 
@@ -11,7 +10,6 @@ router.use('/products', products)
 router.use('/plates', plates)
 router.use('/user', user)
 router.use('/family', family)
-router.use('/favorites', favorites)
 
 /**
  * @apiDefine master Master access only
