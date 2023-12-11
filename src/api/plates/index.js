@@ -240,28 +240,6 @@ router.put('/:id',
   update)
 
 /**
- * @api {put} /plates/:id/favorite set favorited and Update plates
- * @apiName favorite
- * @apiGroup Plates
- * @apiParam favorited Plates's favorited.
- * @apiSuccess {Object} updateOne Plates's update.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Plates not found.
- */
-router.put('/:id/favorite',
-  body({ favorited }),
-  (req, res, next) =>
-    checkPermission(
-      req.header('X-HandOven-Service'),
-      req.header('X-HandOven-User'),
-      req.header('X-HandOven-Family'),
-      'update'
-    )
-      .then(() => next())
-      .catch((err) => unauthorized(res, err)),
-  setPlateFavorite)
-
-/**
  * @api {delete} /plates/:id Delete plates
  * @apiName DeletePlates
  * @apiGroup Plates

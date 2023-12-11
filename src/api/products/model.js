@@ -29,7 +29,7 @@ const Products = new Schema({
   },
   unitMeasure: {
     type: String,
-    required: false
+    required: true
   },
   familyId: {
     type: Schema.Types.ObjectId,

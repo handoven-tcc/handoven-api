@@ -14,15 +14,12 @@ const Plates = new Schema({
     type: Number,
     required: true
   },
-  favorited: {
-    type: Boolean,
-    required: true
-  },
   section: {
     ingredients: [
       {
         ingredients_name: { type: String, required: true },
-        ingredients_quantity: { type: String, required: true },
+        ingredients_quantity: { type: Number, required: true },
+        ingredients_unit_measure: { type: String, required: true },
         ingredients_category: { type: Number, required: true },
         ingredients_notes: { type: String, required: false }
       }
@@ -51,7 +48,6 @@ Plates.methods = {
       image: this.image,
       name: this.name,
       category: this.category,
-      favorited: this.favorited,
       section: this.section
     }
     return view
