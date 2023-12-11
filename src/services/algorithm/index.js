@@ -7,15 +7,23 @@ const conversionTable = {
   'colher de chá': 5,
   'colheres de chá': 5,
   ml: 1,
+  'mililitro': 1,
+  'mililitros': 1,
   'mililitro (ml)': 1,
   'mililitros (ml)': 1,
   l: 1000,
+  'litro': 1000,
+  'litros': 1000,
   'litro (l)': 1000,
   'litros (l)': 1000,
   g: 1,
+  'grama': 1,
+  'gramas': 1,
   'grama (g)': 1,
   'gramas (g)': 1,
   kg: 1,
+  'quilograma': 1000,
+  'quilogramas': 1000,
   'quilograma (kg)': 1000,
   'quilogramas (kg)': 1000,
   unidade: 1,
@@ -276,10 +284,8 @@ const checkRecipes = async (plates, products) => {
   for (const plate of plates) {
     const returnedData = await algorithmRunner(plate, products)
     if (returnedData.not_available_ingredients.length === 0) {
-      console.log(`Pode fazer a receita: ${plate.name}`)
       available_plates.push({ plate, ...returnedData })
     } else {
-      console.log(`Não pode fazer a receita: ${plate.name}`)
       not_available_plates.push({ plate, ...returnedData })
     }
   }
@@ -376,10 +382,6 @@ const algorithmRunner = (plate, products) => {
 }
 
 const convertToMl = (quantity, unit) => {
-  console.log('Convertendo para ML: \n')
-  console.log('quantity: ', quantity)
-  console.log('unit: ', unit)
-  console.log('Unidade Na tablea de Conversão: ', conversionTable[unit], '\n\n')
 
   if (conversionTable[unit]) {
     return quantity * conversionTable[unit]
