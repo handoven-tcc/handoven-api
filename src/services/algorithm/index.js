@@ -1,15 +1,39 @@
 const conversionTable = {
-  Xícara: 240,
-  'Colher de sopa': 15,
-  'Colher de chá': 5,
-  'Mililitros (ml)': 1,
-  'Litros (L)': 1000,
-  'Gramas (g)': 1,
-  'Quilogramas (kg)': 1000,
-  Unidades: 1,
-  Fatias: 1,
-  Copos: 240,
-  Pitadas: 1
+  xícara: 240,
+  xícaras: 240,
+  'a gosto': 1,
+  'colher de sopa': 15,
+  'colheres de sopa': 15,
+  'colher de chá': 5,
+  'colheres de chá': 5,
+  ml: 1,
+  'mililitro': 1,
+  'mililitros': 1,
+  'mililitro (ml)': 1,
+  'mililitros (ml)': 1,
+  l: 1000,
+  'litro': 1000,
+  'litros': 1000,
+  'litro (l)': 1000,
+  'litros (l)': 1000,
+  g: 1,
+  'grama': 1,
+  'gramas': 1,
+  'grama (g)': 1,
+  'gramas (g)': 1,
+  kg: 1,
+  'quilograma': 1000,
+  'quilogramas': 1000,
+  'quilograma (kg)': 1000,
+  'quilogramas (kg)': 1000,
+  unidade: 1,
+  unidades: 1,
+  fatia: 1,
+  fatias: 1,
+  copo: 240,
+  copos: 240,
+  pitada: 1,
+  pitadas: 1
 }
 
 // const mockProducts = [
@@ -260,10 +284,8 @@ const checkRecipes = async (plates, products) => {
   for (const plate of plates) {
     const returnedData = await algorithmRunner(plate, products)
     if (returnedData.not_available_ingredients.length === 0) {
-      console.log(`Pode fazer a receita: ${plate.name}`)
       available_plates.push({ plate, ...returnedData })
     } else {
-      console.log(`Não pode fazer a receita: ${plate.name}`)
       not_available_plates.push({ plate, ...returnedData })
     }
   }
@@ -286,13 +308,12 @@ const algorithmRunner = (plate, products) => {
         ) {
           const requiredQuantity = convertToMl(
             ingredient.ingredients_quantity,
-            ingredient.ingredients_unit_measure
+            ingredient.ingredients_unit_measure?.toLowerCase()
           )
           const availableQuantity = convertToMl(
             product.amount,
-            product.unitMeasure
+            product.unitMeasure?.toLowerCase()
           )
-
           if (requiredQuantity <= availableQuantity) {
             found = true
             missingQuantity = 0
@@ -318,11 +339,11 @@ const algorithmRunner = (plate, products) => {
         ) {
           const requiredQuantity = convertToMl(
             ingredient.ingredients_quantity,
-            ingredient.ingredients_unit_measure
+            ingredient.ingredients_unit_measure?.toLowerCase()
           )
           const availableQuantity = convertToMl(
             product.amount,
-            product.unitMeasure
+            product.unitMeasure?.toLowerCase()
           )
 
           if (requiredQuantity <= availableQuantity) {
@@ -361,6 +382,7 @@ const algorithmRunner = (plate, products) => {
 }
 
 const convertToMl = (quantity, unit) => {
+
   if (conversionTable[unit]) {
     return quantity * conversionTable[unit]
   }
