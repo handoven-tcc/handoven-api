@@ -52,46 +52,43 @@ Plates.methods = {
     }
     return view
   },
-  algorithm(familyId) {
-      const ProductsModel = mongoose.model('Products')
-      const PlatesModel = mongoose.model('Plates')
+  algorithm (familyId) {
+    const ProductsModel = mongoose.model('Products')
+    const PlatesModel = mongoose.model('Plates')
 
-      try {
-          const Products = ProductsModel.find({familyId});
-          const Plates = PlatesModel.findAll();
-          console.log("familyId: "+familyId)
-          console.log("Products: "+JSON.stringify(Products))
-          console.log("Plates: "+JSON.stringify(Plates))
-          return algorithm(Plates, Products);
-      } catch (error) {
-          return({
-          error: error,
-          type: "interal",
-          message: "Não foi possível executar o algorítmo, tente novamente mais tarde ou contate a equipe de suporte!"
+    try {
+      const Products = ProductsModel.find({ familyId })
+      const Plates = PlatesModel.findAll()
+      return algorithm(Plates, Products)
+    } catch (error) {
+      return ({
+        error: error,
+        type: 'interal',
+        message: 'Não foi possível executar o algorítmo, tente novamente mais tarde ou contate a equipe de suporte!'
       })
     }
   }
 }
 
 Plates.statics = {
-   algorithm(familyId) {    
+  algorithm (familyId) {
     return new Promise(async (resolve, reject) => {
       const ProductsModel = mongoose.model('Products')
       const PlatesModel = mongoose.model('Plates')
 
       try {
-          const Products = await ProductsModel.find({familyId});
-          const Plates = await PlatesModel.find();
-          resolve(algorithm(Plates, Products))
+        const Products = await ProductsModel.find({ familyId })
+        const Plates = await PlatesModel.find()
+        resolve(algorithm(Plates, Products))
       } catch (error) {
         console.log('[ERROR]: ', error)
         resolve({
           type: 'internal',
-          subtype: "handoven-api.Plates",
-          message: "Não foi possível executar o algorítmo, tente novamente mais tarde ou contate a equipe de suporte!"
+          subtype: 'handoven-api.Plates',
+          message: 'Não foi possível executar o algorítmo, tente novamente mais tarde ou contate a equipe de suporte!'
         })
       }
-    });
+    })
   }
 }
 

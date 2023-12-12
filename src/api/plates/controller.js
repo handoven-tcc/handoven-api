@@ -27,7 +27,7 @@ export const indexLimit = ({ querymen: { query, select, cursor }, params }, res,
     .catch(next)
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Plates.find(query, select, cursor)
+  Plates.find(query, select, cursor).limit(parseInt(100000))
     .then((plates) => plates.map((plates) => plates.view()))
     .then(success(res))
     .catch(next)
